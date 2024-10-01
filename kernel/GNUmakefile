@@ -24,10 +24,10 @@ ifeq ($(filter $(KARCH),aarch64 loongarch64 riscv64 x86_64),)
 endif
 
 # User controllable C compiler command.
-$(call USER_VARIABLE,KCC,cc)
+$(call USER_VARIABLE,KCC,$(KARCH)-elf-gcc)
 
 # User controllable linker command.
-$(call USER_VARIABLE,KLD,ld)
+$(call USER_VARIABLE,KLD,$(KARCH)-elf-ld)
 
 # User controllable C flags.
 $(call USER_VARIABLE,KCFLAGS,-g -Os -pipe)
@@ -45,7 +45,7 @@ $(call USER_VARIABLE,KLDFLAGS,)
 
 # Ensure the dependencies have been obtained.
 ifneq ($(shell ( test '$(MAKECMDGOALS)' = clean || test '$(MAKECMDGOALS)' = distclean ); echo $$?),0)
-    ifeq ($(shell ( ! test -d freestnd-c-hdrs-0bsd || ! test -f src/cc-runtime.c || ! test -f src/limine.h ); echo $$?),0)
+    ifeq ($(shell ( ! test -d freestnd-c-hdrs-0bsd || ! test -f src/cc-runtime.c ); echo $$?),0)
         $(error Please run the ./get-deps script first)
     endif
 endif
@@ -69,7 +69,7 @@ override KCFLAGS += \
 
 # Internal C preprocessor flags that should not be changed by the user.
 override KCPPFLAGS := \
-    -I src \
+    -I src/include \
     -isystem freestnd-c-hdrs-0bsd \
     $(KCPPFLAGS) \
     -MMD \
@@ -199,7 +199,7 @@ clean:
 # Remove everything built and generated including downloaded dependencies.
 .PHONY: distclean
 distclean:
-	rm -rf bin-* obj-* freestnd-c-hdrs-0bsd src/cc-runtime.c src/limine.h
+	rm -rf bin-* obj-* freestnd-c-hdrs-0bsd src/cc-runtime.c
 
 # Install the final built executable to its final on-root location.
 .PHONY: install
