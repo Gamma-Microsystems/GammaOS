@@ -18,3 +18,5 @@
 .gdb_history
 src/sys/obj-*
 src/sys/bin-*
+.jinx-cache
+jinx
