@@ -7,10 +7,10 @@ QEMUFLAGS ?= -M q35,smm=off -m 3G -cdrom gammaos.iso -serial stdio -smp 4
 
 .PHONY: all
 all:
-	rm -f vinix.iso
-	$(MAKE) vinix.iso
+	rm -f gammaos.iso
+	$(MAKE) gammaos.iso
 
-vinix.iso: jinx
+gammaos.iso: jinx
 	./build-support/makeiso.sh
 
 .PHONY: debug
@@ -22,11 +22,11 @@ jinx:
 	chmod +x jinx
 
 .PHONY: run-kvm
-run-kvm: vinix.iso
+run-kvm: gammaos.iso
 	qemu-system-x86_64 -enable-kvm -cpu host $(QEMUFLAGS)
 
 .PHONY: run-hvf
-run-hvf: vinix.iso
+run-hvf: gammaos.iso
 	qemu-system-x86_64 -accel hvf -cpu host $(QEMUFLAGS)
 
 ovmf/ovmf-code-x86_64.fd:
@@ -38,7 +38,7 @@ ovmf/ovmf-vars-x86_64.fd:
 	curl -Lo $@ https://github.com/osdev0/edk2-ovmf-nightly/releases/latest/download/ovmf-vars-x86_64.fd
 
 .PHONY: run-uefi
-run-uefi: vinix.iso ovmf/ovmf-code-x86_64.fd ovmf/ovmf-vars-x86_64.fd
+run-uefi: gammaos.iso ovmf/ovmf-code-x86_64.fd ovmf/ovmf-vars-x86_64.fd
 	qemu-system-x86_64 \
 		-enable-kvm \
 		-cpu host \
@@ -47,20 +47,20 @@ run-uefi: vinix.iso ovmf/ovmf-code-x86_64.fd ovmf/ovmf-vars-x86_64.fd
 		$(QEMUFLAGS)
 
 .PHONY: run-bochs
-run-bochs: vinix.iso
+run-bochs: gammaos.iso
 	bochs -f bochsrc
 
 .PHONY: run-lingemu
-run-lingemu: vinix.iso
-	lingemu runvirt -m 8192 --diskcontroller type=ahci,name=ahcibus1 --disk vinix.iso,disktype=cdrom,controller=ahcibus1
+run-lingemu: gammaos.iso
+	lingemu runvirt -m 3072 --diskcontroller type=ahci,name=ahcibus1 --disk gammaos.iso,disktype=cdrom,controller=ahcibus1
 
 .PHONY: run
-run: vinix.iso
+run: gammaos.iso
 	qemu-system-x86_64 $(QEMUFLAGS)
 
 .PHONY: clean
 clean:
-	rm -rf iso_root sysroot vinix.iso initramfs.tar
+	rm -rf iso_root sysroot gammaos.iso initramfs.tar
 
 .PHONY: distclean
 distclean: clean
