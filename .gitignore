@@ -16,7 +16,7 @@
 *.ko
 *.pcap
 .gdb_history
-src/sys/obj-*
-src/sys/bin-*
+sys/obj-*
+sys/bin-*
 .jinx-cache
 jinx
