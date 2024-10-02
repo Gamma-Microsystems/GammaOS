@@ -35,7 +35,7 @@ int    __kernel_version_lower = 1;
 #ifdef KERNEL_GIT_TAG
 # define KERNEL_VERSION_SUFFIX STRSTR(KERNEL_GIT_TAG)
 #else
-# define KERNEL_VERSION_SUFFIX "r"
+# define KERNEL_VERSION_SUFFIX "B"
 #endif
 const char * __kernel_version_suffix   = KERNEL_VERSION_SUFFIX;
 
