@@ -4,3 +4,4 @@
 
 # GammaOS - Simple misaka distribution
 ### Under Construction
+``` P.S: aarch64 build is not supported right now ```
